@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<!-- Gyaan Ka Akhada | (c) 2026 TUMHARA NAAM. All rights reserved. -->
+<html lang="hi"><head><meta charset="utf-8"><title>Gyaan Ka Akhada</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--bg:#f4f6ff;--card:#fff;--tx:#1d2340;--ac:#5b5bf0;--ok:#1a9d5a;--no:#d6453d;--bd:#d9ddf5}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#14172b;--card:#1f2340;--tx:#eef0ff;--ac:#8c8cff;--ok:#43d68a;--no:#ff7b72;--bd:#343a66}}
+:root[data-theme="dark"]{--bg:#14172b;--card:#1f2340;--tx:#eef0ff;--ac:#8c8cff;--ok:#43d68a;--no:#ff7b72;--bd:#343a66}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+#app{max-width:680px;margin:0 auto;padding:16px}
+h1{margin:8px 0;font-size:26px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:16px;margin:12px 0}
+select,button{font:inherit;color:var(--tx)}
+select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--bd);background:var(--card);margin:4px 0 10px}
+.btn{display:block;width:100%;text-align:left;padding:12px;margin:8px 0;border-radius:12px;border:2px solid var(--bd);background:var(--card);cursor:pointer}
+.btn.p{background:var(--ac);color:#fff;border-color:var(--ac);text-align:center;font-weight:700}
+.btn.ok{border-color:var(--ok);background:color-mix(in srgb,var(--ok) 20%,var(--card))}
+.btn.no{border-color:var(--no);background:color-mix(in srgb,var(--no) 20%,var(--card))}
+.row{display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.dg{flex:0 0 200px;height:140px;border:2px dashed var(--bd);border-radius:12px;display:flex;align-items:center;justify-content:center;overflow:hidden;color:var(--tx)}
+.dg svg{width:100%;height:100%}
+.q{flex:1 1 200px;font-size:18px;font-weight:600}
+.big{font-size:54px;text-align:center;line-height:1.1}.big small{font-size:14px}
+.msg{font-weight:700;margin:10px 0}
+.bar{height:8px;background:var(--bd);border-radius:8px}.bar i{display:block;height:100%;background:var(--ac);border-radius:8px}
+.tag{font-size:13px;opacity:.8}
+</style></head><body><div id="app"></div>
+<script>
+// [classMin, classMax, subject, question, options, correctIndex, diagram]
+const Q=[
+[5,6,'Maths','Rahul ke paas 🍎 5 the, 3 aur mile. Total kitne?',['7','8','9','6'],1,['emo','🍎',5,3]],
+[5,7,'Maths','Rectangle ka perimeter kya hai?',['13','26','40','20'],1,['rect',8,5]],
+[6,8,'Maths','Rectangle ka area kya hai?',['11','22','28','14'],2,['rect',7,4]],
+[7,9,'Maths','Circle ki circumference (π=22/7)?',['44','22','154','14'],0,['circ',7]],
+[8,10,'Maths','Hypotenuse (karn) kitna hai?',['11','12','13','15'],2,['tri',5,12]],
+[9,12,'Maths','Cube ka volume kya hoga?',['9','18','27','36'],2,['cube',3]],
+[10,12,'Maths','In numbers ka mean (average) kya hai?',['5','6','7','8'],1,['bar',[2,4,6,8,10]]],
+[11,12,'Maths','x² + y² = 9 circle ki radius?',['3','9','6','4.5'],0,['circ',3]],
+[12,12,'Maths','y = x² ka derivative (dy/dx)?',['x','2x','x²','2'],1,['ev','📈','y = x²']],
+[6,8,'Physics','Prakash kis raste me chalta hai?',['Seedhi line me','Gol ghumke','Zigzag','Ruk jata hai'],0,['ev','🔦','Light']],
+[5,8,'Physics','Hamari Sun kya hai?',['Planet','Star','Chand','Comet'],1,['ev','☀️','Sun']],
+[7,9,'Physics','Gaadi 100 m, 10 s me chali. Speed?',['5 m/s','10 m/s','20 m/s','1 m/s'],1,['ev','🚗','100 m / 10 s']],
+[8,12,'Physics','Force ka SI unit kya hai?',['Joule','Pascal','Newton','Watt'],2,['ev','🚀','F = m × a']],
+[10,12,'Physics','Ohm ka niyam: V = ?',['I × R','I / R','R / I','I + R'],0,['ev','🔋','V = ?']],
+[11,12,'Physics','Prithvi ki escape velocity?',['11.2 km/s','9.8 km/s','3 km/s','7.9 km/s'],0,['ev','🌍','Earth']],
+[12,12,'Physics','Capacitance ka SI unit?',['Henry','Farad','Tesla','Weber'],1,['ev','⚡','Capacitor']],
+[6,10,'Chemistry','Paani ka rasayanik formula?',['CO₂','H₂O','O₂','NaCl'],1,['ev','💧','Water']],
+[8,10,'Chemistry','Acid ka pH kaisa hota hai?',['7 se kam','7 se zyada','Exactly 7','14'],0,['ev','🧪','pH scale']],
+[9,10,'Chemistry','Common salt ka rasayanik naam?',['Sodium chloride','Sodium carbonate','Calcium oxide','Potassium'],0,['ev','🧂','NaCl']],
+[11,12,'Chemistry','Carbon ka atomic number kya hai?',['4','6','8','12'],1,['ev','⚛️','Carbon (C)']],
+[11,12,'Chemistry','Avogadro number kitna hota hai?',['6.022×10²³','3×10⁸','9.8','1.6×10⁻¹⁹'],0,['ev','⚗️','1 mole']],
+[12,12,'Chemistry','Benzene ka formula?',['C₆H₆','C₆H₁₂','CH₄','C₂H₆'],0,['ev','🔬','Benzene']],
+[5,8,'Biology','Paudhe photosynthesis se kya banate hain?',['Oxygen','Paani','Dhuan','Namak'],0,['ev','🌱','Photosynthesis']],
+[6,8,'Biology','Insaan ke dil me kitne chambers hote hain?',['2','3','4','5'],2,['ev','❤️','Heart']],
+[9,10,'Biology','Cell ka powerhouse kaun hai?',['Nucleus','Mitochondria','Ribosome','Vacuole'],1,['ev','🔬','Cell']],
+[10,12,'Biology','DNA ka full form?',['Deoxyribonucleic Acid','Dinucleic Acid','Deoxy Nitric Acid','Double Nucleic Acid'],0,['ev','🧬','DNA']],
+[12,12,'Biology','Genetics ka janak kise kehte hain?',['Mendel','Darwin','Newton','Pasteur'],0,['ev','🌱','Pea plant']],
+[6,8,'History','Harappa sabhyata kis nadi ke paas thi?',['Sindhu','Ganga','Yamuna','Narmada'],0,['ev','🏺','Harappa']],
+[7,8,'History','Mughal samrajya ki neev kisne rakhi?',['Akbar','Babur','Shahjahan','Humayun'],1,['ev','🏰','Mughal']],
+[8,10,'History','Bharat kis saal azad hua?',['1942','1947','1950','1930'],1,['ev','🇮🇳','15 August']],
+[9,10,'History','French Revolution kis saal shuru hui?',['1789','1857','1917','1947'],0,['ev','🇫🇷','France']],
+[10,12,'History','Gandhi ji ka Dandi March kis saal hua?',['1930','1920','1942','1857'],0,['ev','🧂','Dandi']],
+[5,8,'Geography','Sabse bada mahasagar kaun sa hai?',['Hind','Atlantic','Pacific','Arctic'],2,['ev','🌊','Ocean']],
+[6,8,'Geography','Prithvi par kitne mahadweep hain?',['5','6','7','8'],2,['ev','🌍','Continents']],
+[6,9,'Geography','Bharat ki sabse lambi nadi?',['Ganga','Yamuna','Godavari','Narmada'],0,['ev','🏞️','River']],
+[9,10,'Geography','Bharat ki sabse unchi choti?',['Kanchenjunga','Everest','K2','Nanda Devi'],0,['ev','🏔️','Himalaya']],
+[9,12,'Geography','Bharat ka Standard Meridian?',['82°30′E','90°E','75°E','68°E'],0,['ev','🧭','IST']],
+[8,12,'Geography','Bharat me monsoon kis disha se aata hai?',['South-West','North-East','North-West','South-East'],0,['ev','☔','Monsoon']],
+[6,12,'Political Science','Bharat me voting ki kam se kam umra?',['18 saal','21 saal','25 saal','16 saal'],0,['ev','🗳️','Vote']],
+[7,12,'Political Science','Sanvidhan kis din lagu hua?',['26 Jan 1950','15 Aug 1947','26 Nov 1949','2 Oct 1950'],0,['ev','📜','Constitution']],
+[11,12,'Political Science','Preamble kin shabdon se shuru hota hai?',['We, the People','Bharat','Hum Sab','Republic'],0,['ev','📜','Preamble']],
+[9,12,'Economics','GDP ka full form?',['Gross Domestic Product','Gross Daily Product','General Domestic Plan','Gross Development Product'],0,['ev','📊','GDP']],
+[11,12,'Economics','Keemat ghate to maang badhe, ye kaun sa niyam?',['Law of Demand','Law of Supply','Inflation','GDP'],0,['ev','📉','Demand']],
+[5,8,'Hindi','"सूरज" का पर्यायवाची शब्द कौन सा है?',['किरण','दिनकर','चाँद','तारा'],1,['ev','☀️','सूरज']],
+[5,8,'Hindi','"सच" का विलोम शब्द क्या है?',['झूठ','सत्य','साँच','ईमान'],0,['ev','⚖️','सच']],
+[7,10,'Hindi','"राम ने रोटी खाई" में क्रिया कौन सी है?',['राम','रोटी','खाई','ने'],2,['ev','🍞','क्रिया']],
+[9,12,'Hindi','"विद्या + आलय" का सन्धि रूप?',['विद्यालय','विद्यालाय','विधालय','विद्यलय'],0,['ev','🏫','दीर्घ संधि']],
+[11,12,'Hindi','अनुप्रास अलंकार में किसकी आवृत्ति होती है?',['वर्ण','शब्द','मात्रा','अर्थ'],0,['ev','✍️','अलंकार']],
+[5,8,'English','"Brave" ka opposite kya hai?',['Strong','Coward','Kind','Angry'],1,['ev','🦁','Brave']],
+[5,8,'English','Plural of "child"?',['childs','children','childrens','childes'],1,['ev','👧👦','Child']],
+[9,12,'English','Sahi sentence chuno: She ___ to school daily.',['go','going','goes','gone'],2,['ev','🏫','School']],
+[9,12,'English','Passive voice: "She writes a letter."',['A letter is written by her','A letter was written by her','A letter writes her','She is written'],0,['ev','✉️','Passive']]
+];
+const GOOD=['Shabash! 🌟 Tum toh genius ho!','Wah! 🔥 Ekdum sahi jawab!','Zabardast! 🚀 Aise hi aage badho!','Kamaal! 🏆 Champion ban rahe ho!','Superb! 💪 Dimaag tez chal raha hai!'];
+const BAD=['Koi baat nahi! 💙 Galti se hi seekhte hain.','Almost! 😊 Agle sawal me pakka sahi hoga.','Himmat mat haro! 🌈 Sahi jawab upar dekho.','Tension nahi! 💡 Practice se perfect banoge.'];
+function D(d){const t=d[0],L='stroke="currentColor" fill="none" stroke-width="2"',T='fill="currentColor" font-size="14" text-anchor="middle"';
+if(t=='emo')return '<div style="font-size:26px;text-align:center">'+d[1].repeat(d[2])+(d[3]?' + '+d[1].repeat(d[3]):'')+'</div>';
+if(t=='ev')return '<div class="big">'+d[1]+'<br><small>'+(d[2]||'')+'</small></div>';
+let s='<svg viewBox="0 0 200 140">';
+if(t=='rect')s+=`<rect x="40" y="35" width="120" height="70" ${L}/><text x="100" y="26" ${T}>${d[1]}</text><text x="178" y="74" ${T}>${d[2]}</text>`;
+if(t=='tri')s+=`<polygon points="40,110 160,110 40,30" ${L}/><text x="24" y="74" ${T}>${d[1]}</text><text x="100" y="128" ${T}>${d[2]}</text><text x="115" y="62" ${T}>?</text>`;
+if(t=='circ')s+=`<circle cx="100" cy="70" r="50" ${L}/><line x1="100" y1="70" x2="150" y2="70" ${L}/><text x="125" y="62" ${T}>r = ${d[1]}</text>`;
+if(t=='cube')s+=`<rect x="40" y="55" width="70" height="70" ${L}/><rect x="70" y="25" width="70" height="70" ${L}/><path d="M40 55L70 25M110 55L140 25M40 125L70 95M110 125L140 95" ${L}/><text x="75" y="139" ${T}>side = ${d[1]}</text>`;
+if(t=='bar'){const m=Math.max(...d[1]);d[1].forEach((v,i)=>{const h=v/m*90;s+=`<rect x="${20+i*34}" y="${115-h}" width="24" height="${h}" fill="var(--ac)"/><text x="${32+i*34}" y="130" ${T}>${v}</text>`})}
+return s+'</svg>'}
+const G={'Science (sab)':['Physics','Chemistry','Biology'],'Social Science (sab)':['History','Geography','Political Science','Economics']};
+let S={};const $=e=>document.getElementById('app').innerHTML=e;
+function home(){const o=(a,f)=>a.map(x=>`<option>${f?f(x):x}</option>`).join('');
+$(`<h1>🪔 Gyaan Ka Akhada</h1><div class="tag">NCERT syllabus • Class 5-12 • Dimaag ka dangal — seekho, khelo, jeeto!</div><div class="card">
+<label>Class</label><select id="c">${o([5,6,7,8,9,10,11,12])}</select>
+<label>Subject</label><select id="s">${o(['All','Maths','Science (sab)','Physics','Chemistry','Biology','Social Science (sab)','History','Geography','Political Science','Economics','Hindi','English'])}</select>
+<button class="btn p" onclick="go('Practice')">📝 Practice Mode (turant feedback)</button>
+<button class="btn p" onclick="go('Exam')">⏱️ Exam Mode (result end me)</button></div><p class="tag" style="text-align:center">© 2026 TUMHARA NAAM. All rights reserved.</p>`)}
+function go(m){const c=+document.getElementById('c').value,s=document.getElementById('s').value;
+const l=Q.filter(q=>c>=q[0]&&c<=q[1]&&(s=='All'||q[2]==s||(G[s]||[]).includes(q[2]))).sort(()=>Math.random()-.5).slice(0,10);
+if(!l.length){alert('Is class/subject ke sawal jald add honge!');return}
+S={m,l,i:0,sc:0,a:[],c,s};show()}
+function show(){const q=S.l[S.i];
+$(`<div class="tag">Class ${S.c} • ${q[2]} • ${S.m} • Sawal ${S.i+1}/${S.l.length} • Score ${S.sc}</div>
+<div class="bar"><i style="width:${S.i/S.l.length*100}%"></i></div><div class="card"><div class="row"><div class="dg">${D(q[6])}</div><div class="q">${q[3]}</div></div>
+${q[4].map((x,k)=>`<button class="btn" onclick="pick(${k})">${String.fromCharCode(65+k)}. ${x}</button>`).join('')}<div id="m"></div></div>`)}
+function pick(k){const q=S.l[S.i],ok=k==q[5];S.a.push(k);if(ok)S.sc++;
+if(S.m=='Exam')return nxt();
+const b=document.querySelectorAll('.btn');b.forEach((e,j)=>{e.disabled=true;if(j==q[5])e.classList.add('ok');else if(j==k)e.classList.add('no')});
+document.getElementById('m').innerHTML=`<div class="msg" style="color:var(--${ok?'ok':'no'})">${(ok?GOOD:BAD)[(S.i+(ok?S.sc:0))%(ok?GOOD.length:BAD.length)]}</div><button class="btn p" onclick="nxt()">Aage ➡️</button>`}
+function nxt(){S.i++;S.i<S.l.length?show():end()}
+function end(){const p=Math.round(S.sc/S.l.length*100);
+$(`<h1>${p>=80?'🏆':p>=50?'👍':'💪'} Result</h1><div class="card"><div class="big">${S.sc}/${S.l.length}</div><p style="text-align:center">${p>=80?'Shandar! Tum topper ho! 🌟':p>=50?'Accha hai! Thodi aur practice karo 🚀':'Koi baat nahi, dobara try karo, tum kar loge! 💙'}</p></div>
+${S.m=='Exam'?S.l.map((q,i)=>`<div class="card"><b>${q[3]}</b><br>Tumhara: ${q[4][S.a[i]]} ${S.a[i]==q[5]?'✅':'❌'}<br>Sahi: ${q[4][q[5]]}</div>`).join(''):''}
+<button class="btn p" onclick="home()">🏠 Home</button>`)}
+home();
+</script></body></html>
